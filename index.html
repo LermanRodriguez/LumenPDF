@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumenPDF</title>
+    <meta name="description" content="Editor de PDFs que funciona 100% en tu dispositivo. Ningún archivo se sube a internet.">
+    <!-- Bloquea cualquier conexión externa: todo se procesa en el dispositivo -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: 'wasm-unsafe-eval' blob:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; object-src 'none'; form-action 'none'">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e5484d'/%3E%3Cpath d='M10 7h9l5 5v13a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z' fill='%23fff'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#/" aria-label="Inicio">
+            <span class="brand-logo" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M10 7h9l5 5v13a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" fill="#fff"/><path d="M19 7v5h5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <span class="brand-name">Lumen<span class="brand-accent">PDF</span></span>
+        </a>
+        <div class="topbar-right">
+            <span class="privacy-badge" title="Los archivos nunca salen de tu dispositivo. No hay servidores.">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>100% en tu dispositivo</span>
+            </span>
+            <button class="icon-btn" id="themeToggle" type="button" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro">
+                <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                <svg class="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main id="app"></main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <a class="brand" href="#/">
+                    <span class="brand-logo" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M10 7h9l5 5v13a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" fill="#fff"/><path d="M19 7v5h5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </span>
+                    <span class="brand-name">Lumen<span class="brand-accent">PDF</span></span>
+                </a>
+                <p>Herramientas profesionales para trabajar con PDF, diseñadas con un principio claro: tus documentos son tuyos. Todo se procesa en tu dispositivo, sin servidores, sin cuentas y sin rastreo.</p>
+            </div>
+            <nav class="footer-col" aria-label="Herramientas">
+                <h4>Herramientas</h4>
+                <a href="#/unir">Unir PDF</a>
+                <a href="#/dividir">Dividir PDF</a>
+                <a href="#/editar">Editar y firmar</a>
+                <a href="#/comprimir">Comprimir PDF</a>
+                <a href="#/proteger">Proteger con contraseña</a>
+            </nav>
+            <div class="footer-col">
+                <h4>Compromiso de privacidad</h4>
+                <span>Procesamiento 100% local</span>
+                <span>Funciona sin conexión</span>
+                <span>Cifrado AES-256</span>
+                <span>Sin publicidad ni seguimiento</span>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© <span id="footerYear">2026</span> LumenPDF. Todos los derechos reservados.</span>
+            <span class="footer-credit">Diseñado y desarrollado por <strong>Lerman Maestre</strong></span>
+        </div>
+    </footer>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <div id="modalRoot"></div>
+    <div id="busy" class="busy" hidden>
+        <div class="busy-card">
+            <div class="spinner"></div>
+            <div class="busy-text" id="busyText">Procesando…</div>
+            <div class="progress" id="busyProgressWrap" hidden><div class="progress-bar" id="busyProgress"></div></div>
+            <div class="busy-note">Procesando en tu dispositivo</div>
+        </div>
+    </div>
+
+    <!-- Librerías locales (sin CDN, funciona sin internet) -->
+    <script src="lib/pdf-lib.min.js"></script>
+    <script src="lib/pdfjs/pdf.min.js"></script>
+    <script src="lib/jszip.min.js"></script>
+    <script src="lib/Sortable.min.js"></script>
+
+    <!-- Núcleo -->
+    <script src="js/core/icons.js"></script>
+    <script src="js/core/ui.js"></script>
+    <script src="js/core/engine.js"></script>
+    <script src="js/core/components.js"></script>
+
+    <!-- Herramientas -->
+    <script src="js/tools/unir.js"></script>
+    <script src="js/tools/organizar.js"></script>
+    <script src="js/tools/dividir.js"></script>
+    <script src="js/tools/editar.js"></script>
+    <script src="js/tools/marca-agua.js"></script>
+    <script src="js/tools/numerar.js"></script>
+    <script src="js/tools/comprimir.js"></script>
+    <script src="js/tools/imagenes-a-pdf.js"></script>
+    <script src="js/tools/pdf-a-imagenes.js"></script>
+    <script src="js/tools/proteger.js"></script>
+    <script src="js/tools/desbloquear.js"></script>
+    <script src="js/tools/metadatos.js"></script>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
