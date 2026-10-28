@@ -1,0 +1,86 @@
+/* Miniaturas de páginas, tarjetas de archivo, dividir y vistas previas */
+
+/* ---------- Rejilla de páginas ---------- */
+.page-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--thumb, 150px), 1fr)); gap: 18px; align-items: end; }
+.page-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: grab; user-select: none; -webkit-user-select: none; border-radius: 12px; padding: 8px; border: 2px solid transparent; transition: background .12s, border-color .12s; touch-action: manipulation; }
+.page-item.static { cursor: pointer; }
+.page-item:hover { background: var(--surface-2); }
+.page-item.selected { border-color: var(--accent); background: var(--accent-soft); }
+.page-item.is-dragging, .file-card.is-dragging { opacity: .35; }
+.thumb-wrap { position: relative; width: 100%; display: grid; place-items: center; aspect-ratio: 1 / 1.3; }
+.thumb {
+    max-width: 100%; max-height: 100%; background: #fff; box-shadow: var(--page-shadow); border-radius: 3px;
+    transition: transform .25s ease;
+}
+.thumb.placeholder { width: 75%; aspect-ratio: 1/1.41; background: linear-gradient(110deg, var(--surface-2) 30%, var(--surface-3) 50%, var(--surface-2) 70%); background-size: 200% 100%; animation: shimmer 1.3s infinite linear; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.page-label { font-size: 12.5px; color: var(--text-2); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px; max-width: 100%; }
+.page-label .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 110px; }
+.src-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; }
+.page-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; opacity: 0; transition: opacity .12s; z-index: 2; }
+.page-item:hover .page-actions, .page-item.selected .page-actions, .file-card:hover .page-actions { opacity: 1; }
+.page-actions button { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 8px; background: rgba(20, 22, 28, .78); color: #fff; cursor: pointer; }
+.page-actions button:hover { background: rgba(20, 22, 28, .95); }
+.page-actions svg { width: 16px; height: 16px; }
+.page-check { position: absolute; top: 12px; left: 12px; width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--text-3); background: var(--surface); display: grid; place-items: center; opacity: 0; z-index: 2; }
+.page-item:hover .page-check, .page-item.selected .page-check, .selecting .page-check { opacity: 1; }
+.page-item.selected .page-check { background: var(--accent); border-color: var(--accent); }
+.page-item.selected .page-check::after { content: ""; width: 10px; height: 5px; border: 2.5px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.blank-page { background: #fff; box-shadow: var(--page-shadow); border-radius: 3px; }
+
+/* ---------- Tarjetas de archivo (unir) ---------- */
+.file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 18px; }
+.file-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 14px 12px; cursor: grab; display: flex; flex-direction: column; gap: 10px; transition: box-shadow .15s; touch-action: manipulation; }
+.file-card:hover { box-shadow: var(--shadow-md); }
+.file-card .thumb-wrap { aspect-ratio: 1/1.25; }
+.file-card .page-actions { top: 10px; right: 10px; }
+.file-stack { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.file-stack.multi::before, .file-stack.multi::after { content: ""; position: absolute; width: 70%; height: 86%; background: #fff; box-shadow: var(--page-shadow); border-radius: 3px; }
+.file-stack.multi::before { transform: rotate(-5deg) translate(-6px, 2px); }
+.file-stack.multi::after { transform: rotate(4deg) translate(6px, 0); }
+.file-stack .thumb { position: relative; z-index: 1; }
+.file-name { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.file-meta { font-size: 12px; color: var(--text-2); display: flex; justify-content: space-between; gap: 6px; }
+.file-order { position: absolute; top: -10px; left: -10px; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; box-shadow: var(--shadow-sm); z-index: 3; }
+.add-card { border: 2px dashed var(--border); border-radius: var(--radius); background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 220px; cursor: pointer; color: var(--text-2); font-weight: 600; }
+.add-card:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.add-card svg { width: 34px; height: 34px; }
+
+/* ---------- Resumen de documento ---------- */
+.doc-summary { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); margin-bottom: 18px; }
+.doc-summary .ds-thumb { width: 54px; flex: none; }
+.doc-summary .thumb { width: 54px; }
+.doc-summary .ds-name { font-weight: 700; word-break: break-all; }
+.doc-summary .ds-meta { font-size: 13px; color: var(--text-2); }
+.doc-summary .ds-grow { flex: 1; min-width: 0; }
+
+/* ---------- Dividir: tijeras entre páginas ---------- */
+.split-flow { display: flex; flex-wrap: wrap; align-items: stretch; row-gap: 22px; }
+.split-page { width: var(--thumb, 130px); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px; border-radius: 10px; position: relative; }
+.split-page::before { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 5px; border-radius: 3px; background: var(--group-color, transparent); }
+.split-page.excluded { opacity: .35; }
+.split-gap { width: 30px; display: flex; align-items: center; justify-content: center; position: relative; }
+.split-gap button { width: 28px; height: 28px; border-radius: 50%; border: 1.5px dashed var(--text-3); background: var(--surface); color: var(--text-3); display: grid; place-items: center; cursor: pointer; opacity: .55; transition: all .12s; }
+.split-gap button svg { width: 15px; height: 15px; }
+.split-gap:hover button { opacity: 1; border-color: var(--accent); color: var(--accent); }
+.split-gap.cut button { opacity: 1; border-style: solid; border-color: var(--accent); background: var(--accent); color: #fff; }
+.split-gap.cut::before { content: ""; position: absolute; top: 4px; bottom: 4px; left: 50%; border-left: 2px dashed var(--accent); z-index: -1; }
+.groups-list { display: flex; flex-direction: column; gap: 6px; }
+.groups-list.scroll { text-align: left; max-height: 220px; overflow: auto; margin-bottom: 20px; }
+.group-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; background: var(--surface-2); font-size: 13.5px; }
+.group-row .swatch { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+.group-row .gname { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.group-row .gpages { color: var(--text-2); font-variant-numeric: tabular-nums; }
+
+/* ---------- Vista previa grande ---------- */
+.preview-stage { display: flex; justify-content: center; }
+.preview-page { position: relative; box-shadow: var(--page-shadow); background: #fff; overflow: hidden; }
+.preview-page canvas { display: block; }
+.preview-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.preview-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; color: var(--text-2); font-size: 13.5px; }
+.large-page { max-width: 100%; max-height: 70vh; box-shadow: var(--page-shadow); }
+.large-page-wrap { display: grid; place-items: center; min-height: 300px; }
+
+/* ---------- Seguridad ---------- */
+.lock-visual { width: 130px; height: 130px; margin: 10px auto 24px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); }
+.lock-visual svg { width: 62px; height: 62px; stroke-width: 1.8; }

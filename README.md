@@ -1,71 +1,98 @@
 # LumenPDF
 
-Editor de PDFs que funciona **100 % en el dispositivo**. Ningún archivo se sube a internet: no hay servidor, todas las librerías están en `lib/` y la página bloquea cualquier conexión externa (Content-Security-Policy en `index.html`).
+Editor de PDF que funciona **100 % en el dispositivo**: une, divide, organiza, edita, firma, comprime y protege PDFs sin subir nada a internet.
 
-## Cómo abrirlo
+Construido con **React 19 + TypeScript + Vite**. Todo el procesamiento ocurre en el navegador. En producción, la página incluye una política de seguridad (CSP) que bloquea cualquier conexión externa.
 
-- **Doble clic en `index.html`.** Funciona en Chrome, Edge y Firefox, también sin internet.
-- Opcional, servidor local (un poco más rápido con PDFs grandes, porque pdf.js usa un *worker*):
-  ```bash
-  python -m http.server 8765 --bind 127.0.0.1
-  ```
-  y abrir http://127.0.0.1:8765
+## Puesta en marcha
+
+Requisitos: [Node.js](https://nodejs.org) 20 o superior.
+
+```bash
+npm install
+npm run dev          # servidor de desarrollo en http://localhost:5173
+```
+
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo con recarga en caliente |
+| `npm run build` | Comprueba los tipos y genera la versión final en `dist/` |
+| `npm run preview` | Sirve `dist/` para probar la versión final |
+| `npm run typecheck` | Solo comprueba los tipos de TypeScript |
+| `npm run lint` | Revisa el código con oxlint |
+
+La carpeta `dist/` es un sitio estático: se puede publicar tal cual en GitHub Pages, Netlify o cualquier servidor (usa rutas relativas y `HashRouter`, así que no necesita configuración).
 
 ## Herramientas
 
-| Sección | Herramienta | Qué hace |
+| Sección | Herramienta | Carpeta |
 |---|---|---|
-| Organizar | Unir PDF | Tarjetas arrastrables, ordenar A→Z, duplicar, página en blanco para doble cara |
-| | Organizar páginas | Miniaturas: reordenar, rotar, eliminar, duplicar, insertar en blanco, extraer, deshacer |
-| | Dividir PDF | Tijeras entre páginas, cada N páginas, todas separadas o por rangos → ZIP |
-| Editar | Editar y firmar | Texto, firma (dibujada, escrita o imagen), imágenes, resaltado, formas, línea, dibujo libre, tapar, ✓/✗, fecha |
-| | Marca de agua | Texto o logo, centrada o en mosaico, con vista previa |
-| | Numerar páginas | Posición 3×3, formatos, saltar portada, vista previa |
-| Convertir | Comprimir | Sin pérdida (qpdf) o fuerte (páginas a JPG), con comparación de tamaño |
-| | Imágenes a PDF | JPG/PNG/WEBP/GIF/BMP, rotar, A4/Carta/Oficio/ajustar, márgenes |
-| | PDF a imágenes | JPG o PNG a 72/150/300 ppp → ZIP |
-| Seguridad | Proteger | AES-256 con permisos (imprimir, copiar, modificar…) |
-| | Quitar contraseña | Descifra con la contraseña o elimina restricciones |
-| | Metadatos | Editar título/autor… o borrarlos todos |
+| Organizar | Unir PDF | `features/merge` |
+| | Organizar páginas | `features/organize` |
+| | Dividir PDF | `features/split` |
+| Editar y firmar | Editar y firmar | `features/edit` |
+| | Marca de agua | `features/watermark` |
+| | Numerar páginas | `features/page-numbers` |
+| Convertir y optimizar | Comprimir PDF | `features/compress` |
+| | Imágenes a PDF | `features/images-to-pdf` |
+| | PDF a imágenes | `features/pdf-to-images` |
+| Seguridad | Proteger con contraseña | `features/protect` |
+| | Quitar contraseña | `features/unlock` |
+| | Propiedades y metadatos | `features/metadata` |
 
-Si abres un PDF protegido en cualquier herramienta, se pide la contraseña y se descifra en memoria. Al terminar, "Continuar con este PDF" pasa el resultado a otra herramienta.
-
-## Estructura
+## Estructura del código
 
 ```
-index.html              página única
-css/styles.css          estilos (tema claro/oscuro)
-js/core/ui.js           avisos, modales, progreso, descargas
-js/core/engine.js       carga/descifrado, miniaturas, qpdf, utilidades PDF
-js/core/components.js   zona de soltar, pantalla final, vista previa, registro de herramientas
-js/core/icons.js        iconos SVG
-js/tools/*.js           una herramienta por archivo
-js/app.js               navegación (#/herramienta) y pantalla de inicio
-lib/                    pdf-lib, pdf.js, qpdf (WebAssembly), JSZip, SortableJS
+src/
+├── main.tsx                 Punto de entrada
+├── app/
+│   ├── App.tsx              Providers + rutas
+│   ├── routes.tsx           Carga diferida de cada herramienta (code splitting)
+│   └── providers/           Avisos (toast), indicador de progreso y diálogos
+├── components/
+│   ├── layout/              Cabecera, pie, estructura de herramienta, captura de errores
+│   ├── pdf/                 Componentes PDF reutilizables (zona de soltar, miniaturas,
+│   │                        vista previa, rejilla arrastrable, pantalla de resultado…)
+│   └── ui/                  Controles genéricos (botones, campos, iconos, modal…)
+├── features/
+│   ├── catalog.ts           Catálogo de herramientas (nombre, icono, color, sección)
+│   ├── home/                Pantalla de inicio
+│   └── <herramienta>/
+│       ├── XxxTool.tsx      Interfaz de la herramienta
+│       └── xxx.ts           Lógica PDF pura (sin React), fácil de probar y reutilizar
+├── hooks/                   Hooks compartidos (carga de PDFs, historial, atajos…)
+├── lib/
+│   ├── pdf/                 Núcleo PDF: carga y descifrado, pdf.js, pdf-lib, qpdf,
+│   │                        renderizado, geometría, rangos, imágenes
+│   └── utils/               Formato, archivos, colores, ZIP, errores
+└── styles/                  CSS por área (tokens, layout, controles, editor…)
 ```
+
+**Reglas de la arquitectura**
+
+- La lógica PDF vive en archivos `.ts` sin React (`lib/pdf` y los `xxx.ts` de cada herramienta). Los componentes solo gestionan estado e interfaz.
+- Cada herramienta es independiente y se carga solo cuando se abre.
+- Los objetos del editor se guardan en *unidades de página* (puntos, origen arriba-izquierda, tal como se ve la página). `lib/pdf/geometry.ts` los convierte a coordenadas PDF, así que lo dibujado coincide con lo que se ve, incluso en páginas giradas.
+- qpdf (≈1.3 MB) y los recursos de pdf.js se copian a `vendor/` al compilar y se cargan bajo demanda.
 
 ### Añadir una herramienta
 
-Crea `js/tools/mi-herramienta.js`, añade su `<script>` en `index.html` y registra:
+1. Añádela a `TOOLS` en `src/features/catalog.ts` (y su id a `ToolId`).
+2. Crea `src/features/mi-herramienta/MiHerramientaTool.tsx` con un `export default`.
+3. Regístrala en `TOOL_COMPONENTS` de `src/app/routes.tsx`.
 
-```js
-Tools.register({
-    id: 'mi-herramienta', name: 'Mi herramienta', desc: '…',
-    icon: 'file', color: '#3b6fe0', section: 'convertir',
-    mount(ctx) {
-        // ctx.body, ctx.side, ctx.footer: zonas de la pantalla
-        // Engine.loadMany(files) carga PDFs (pide contraseña si hace falta)
-        // Comp.finish(ctx, { out: { bytes, name } }) muestra el resultado y descarga
-    },
-});
-```
+Las piezas habituales: `ToolLayout`, `Dropzone`, `usePdfLoader`, `useBusyTask` (progreso y errores), `ResultView` (descarga y "Continuar con…") y `useHandoff` (recibir PDFs de otra herramienta).
 
 ## Limitaciones conocidas
 
-- El texto añadido usa las fuentes estándar del PDF (Helvetica, Times, Courier): los acentos y la ñ funcionan, pero los emojis y otros alfabetos se reemplazan por `?`.
-- "Tapar" cubre la zona visualmente, pero el texto original sigue dentro del archivo. No sirve para censurar datos sensibles.
+- El texto añadido usa las fuentes estándar del PDF (Helvetica, Times, Courier). Los acentos y la ñ funcionan; los emojis y otros alfabetos se reemplazan por `?`.
+- "Tapar" cubre la zona visualmente, pero el texto original sigue dentro del archivo: no sirve para censurar datos sensibles.
 - La compresión fuerte convierte las páginas en imágenes: el texto deja de poder seleccionarse.
 
-## Licencias de las librerías
+## Librerías
 
-pdf-lib (MIT), pdf.js (Apache-2.0), qpdf-wasm (ISC; qpdf es Apache-2.0), JSZip (MIT), SortableJS (MIT).
+pdf-lib (MIT), pdf.js (Apache-2.0), qpdf-wasm (ISC; qpdf es Apache-2.0), JSZip (MIT), dnd-kit (MIT), React Router (MIT).
+
+---
+
+Diseñado y desarrollado por **Lerman Maestre**.

@@ -1,0 +1,100 @@
+/* Botones y controles de formulario */
+
+/* ---------- Botones ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); cursor: pointer; font-weight: 600; font-size: 14px;
+    white-space: nowrap; transition: background .12s, border-color .12s, transform .05s;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn svg { width: 17px; height: 17px; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-lg { padding: 13px 18px; font-size: 15.5px; border-radius: 12px; }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--surface-3); }
+.btn-sm { padding: 6px 10px; font-size: 13px; border-radius: 8px; }
+.btn-icon { padding: 7px; }
+.btn[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.btn-danger:hover { color: var(--accent); }
+
+/* ---------- Campos ---------- */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.field-row { display: flex; gap: 10px; }
+.field-row > * { flex: 1; min-width: 0; }
+.input {
+    width: 100%; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border);
+    background: var(--surface); outline: none;
+}
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+textarea.input { resize: vertical; min-height: 70px; }
+.range-row { display: flex; align-items: center; gap: 10px; }
+.range-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+.range-val { min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-2); }
+input[type="color"] { width: 42px; height: 36px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+.check { display: flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; padding: 4px 0; }
+.check input { width: 17px; height: 17px; accent-color: var(--accent); }
+.check-hint { margin: 2px 0 0 26px; }
+
+/* ---------- Selector segmentado ---------- */
+.segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 3px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); }
+.segmented button { border: 0; background: transparent; padding: 8px 6px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-2); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.segmented button svg { width: 20px; height: 20px; }
+.segmented button[aria-pressed="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
+.segmented .seg-sub { font-weight: 400; font-size: 11px; }
+
+/* ---------- Tarjetas de opción ---------- */
+.option-cards { display: grid; gap: 8px; }
+.option-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 11px; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; text-align: left; }
+.option-card.compact { padding: 9px 12px; }
+.option-card:hover { border-color: var(--text-3); }
+.option-card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.option-card .oc-icon { width: 34px; height: 34px; flex: none; border-radius: 9px; display: grid; place-items: center; background: var(--surface-2); color: var(--text-2); }
+.option-card[aria-pressed="true"] .oc-icon { background: var(--accent); color: #fff; }
+.option-card .oc-icon svg { width: 18px; height: 18px; }
+.option-card strong { display: block; font-size: 14px; }
+.option-card span { font-size: 12.5px; color: var(--text-2); }
+
+/* ---------- Selector de posición 3x3 ---------- */
+.pos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px; aspect-ratio: 210/297; padding: 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--page-shadow); margin: 0 auto; }
+.pos-grid button { border: 1.5px dashed var(--border); border-radius: 6px; background: transparent; cursor: pointer; }
+.pos-grid button:hover { border-color: var(--text-3); }
+.pos-grid button[aria-pressed="true"] { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.pos-grid button[aria-pressed="true"]::after { content: ""; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin: auto; }
+.pos-grid button:disabled { visibility: hidden; }
+
+/* ---------- Muestras de color ---------- */
+.swatches { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.swatches button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--border); cursor: pointer; }
+.swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--accent); }
+.swatches .swatch-none { background: linear-gradient(135deg, #fff 45%, #e5484d 45%, #e5484d 55%, #fff 55%); }
+
+/* ---------- Contraseña ---------- */
+.pw-wrap { position: relative; }
+.pw-wrap .input { padding-right: 44px; }
+.pw-wrap button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; cursor: pointer; color: var(--text-3); padding: 6px; }
+.pw-wrap button svg { width: 18px; height: 18px; }
+.strength { height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; margin-top: 4px; }
+.strength div { height: 100%; width: 0; transition: width .2s, background .2s; }
+.strength-label { font-size: 12px; color: var(--text-3); min-height: 1.2em; }
+
+/* ---------- Filas de datos ---------- */
+.stat-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.stat-row:last-child { border-bottom: 0; }
+.stat-row > span:first-child { color: var(--text-2); min-width: 0; }
+.stat-row > span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- Cuadro informativo ---------- */
+.info-box { display: flex; gap: 10px; padding: 12px; border-radius: 11px; font-size: 13px; line-height: 1.4; background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--text); margin-bottom: 14px; }
+.info-box.warn { background: color-mix(in srgb, var(--warn) 14%, transparent); }
+.info-box svg { width: 18px; height: 18px; color: var(--info); margin-top: 1px; }
+.info-box.warn svg { color: var(--warn); }
+
+.zoom-ctl { display: inline-flex; align-items: center; gap: 4px; }
+.zoom-ctl > span { min-width: 48px; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--text-2); }
+.zoom-ctl input[type="range"] { width: 110px; accent-color: var(--accent); }
+.zoom-ctl > svg { width: 18px; height: 18px; color: var(--text-3); }

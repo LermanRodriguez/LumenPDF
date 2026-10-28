@@ -1,0 +1,47 @@
+/* Variables de diseño (tema claro por defecto, oscuro con data-theme="dark") */
+
+:root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #f0f2f5;
+    --surface-3: #e6e9ee;
+    --border: #dfe3ea;
+    --text: #1b1f27;
+    --text-2: #5b6474;
+    --text-3: #8a93a3;
+    --accent: #e5484d;
+    --accent-2: #c9363b;
+    --accent-soft: #fde8e8;
+    --ok: #2f9e5b;
+    --warn: #d68a00;
+    --info: #3b6fe0;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+    --shadow-md: 0 4px 12px rgba(16, 24, 40, .08), 0 2px 4px rgba(16, 24, 40, .06);
+    --shadow-lg: 0 20px 40px rgba(16, 24, 40, .16);
+    --radius: 14px;
+    --radius-sm: 9px;
+    --page-shadow: 0 1px 3px rgba(0, 0, 0, .18), 0 4px 14px rgba(0, 0, 0, .08);
+    --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --topbar-h: 59px;
+    --tool-header-h: 73px;
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    --bg: #111317;
+    --surface: #1a1d23;
+    --surface-2: #22262e;
+    --surface-3: #2b3039;
+    --border: #2f343e;
+    --text: #eceef2;
+    --text-2: #a7afbd;
+    --text-3: #747d8c;
+    --accent: #ff5c61;
+    --accent-2: #ff7a7e;
+    --accent-soft: #3a1d20;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .4);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, .55);
+    --page-shadow: 0 1px 3px rgba(0, 0, 0, .6), 0 4px 14px rgba(0, 0, 0, .4);
+    color-scheme: dark;
+}

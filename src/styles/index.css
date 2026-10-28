@@ -1,0 +1,9 @@
+/* Punto de entrada de estilos. El orden importa: de lo general a lo específico. */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './controls.css';
+@import './feedback.css';
+@import './pages.css';
+@import './editor.css';
+@import './responsive.css';

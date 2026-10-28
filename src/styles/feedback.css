@@ -1,0 +1,68 @@
+/* Modales, avisos, indicador de progreso y zona de soltar */
+
+/* ---------- Modal ---------- */
+/* Por encima del indicador de progreso: se puede pedir una contraseña mientras se procesa */
+.modal-back { position: fixed; inset: 0; z-index: 130; background: rgba(10, 12, 16, .5); display: grid; place-items: center; padding: 16px; animation: fade .15s; }
+.modal { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--surface); border-radius: 18px; box-shadow: var(--shadow-lg); padding: 22px; animation: pop .18s; }
+.modal.wide { width: min(720px, 100%); }
+.modal h3 { margin: 0 0 6px; font-size: 19px; }
+.modal .modal-sub { margin: 0 0 16px; color: var(--text-2); font-size: 14px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { transform: scale(.96); opacity: 0; } }
+
+/* ---------- Avisos ---------- */
+.toasts { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 120; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 12px; background: #1b1f27; color: #fff; box-shadow: var(--shadow-lg); font-size: 14px; animation: pop .2s; pointer-events: auto; max-width: min(560px, 92vw); transition: opacity .3s; }
+.toast.leaving { opacity: 0; }
+.toast svg { width: 18px; height: 18px; stroke-width: 2.2; }
+.toast.ok svg { color: #5fd68e; }
+.toast.err svg { color: #ff7a7e; }
+.toast.warn svg { color: #ffc14d; }
+.toast.info svg { color: #7cc4ff; }
+
+/* ---------- Procesando ---------- */
+.busy { position: fixed; inset: 0; z-index: 110; background: rgba(10, 12, 16, .45); display: grid; place-items: center; }
+.busy-card { background: var(--surface); border-radius: 18px; padding: 26px 30px; min-width: 280px; text-align: center; box-shadow: var(--shadow-lg); }
+.spinner { width: 42px; height: 42px; margin: 0 auto 14px; border-radius: 50%; border: 4px solid var(--surface-3); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.busy-text { font-weight: 600; }
+.busy-note { margin-top: 10px; font-size: 12px; color: var(--text-3); }
+.progress { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; margin-top: 12px; }
+.progress-bar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+
+/* ---------- Zona de soltar ---------- */
+.dropzone {
+    border: 2.5px dashed var(--border); border-radius: 20px; padding: 56px 24px;
+    text-align: center; background: var(--surface); cursor: pointer;
+    transition: border-color .15s, background .15s; max-width: 760px; margin: 30px auto;
+}
+.dropzone:hover, .dropzone.drag { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone .dz-icon { width: 76px; height: 76px; margin: 0 auto 16px; border-radius: 20px; display: grid; place-items: center; background: color-mix(in srgb, var(--c, var(--accent)) 14%, transparent); color: var(--c, var(--accent)); }
+.dropzone .dz-icon svg { width: 38px; height: 38px; stroke-width: 1.8; }
+.dropzone h3 { margin: 0 0 6px; font-size: 20px; }
+.dropzone p { margin: 0 0 18px; color: var(--text-2); }
+.dropzone .dz-note { margin-top: 18px; font-size: 12.5px; color: var(--text-3); display: flex; justify-content: center; align-items: center; gap: 6px; }
+.dropzone .dz-note svg { width: 14px; height: 14px; }
+.page-drop-overlay { position: fixed; inset: 0; z-index: 80; background: color-mix(in srgb, var(--accent) 14%, transparent); border: 4px dashed var(--accent); display: grid; place-items: center; pointer-events: none; font-size: 22px; font-weight: 700; color: var(--accent); }
+
+/* ---------- Resultado ---------- */
+.result-card { max-width: 620px; margin: 40px auto; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px 28px; box-shadow: var(--shadow-md); }
+.result-card .rc-icon { width: 74px; height: 74px; margin: 0 auto 16px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.result-card .rc-icon.neutral { background: color-mix(in srgb, var(--info) 14%, transparent); color: var(--info); }
+.result-card .rc-icon svg { width: 38px; height: 38px; stroke-width: 2.4; }
+.result-card h3 { margin: 0 0 8px; font-size: 22px; }
+.result-card .rc-sub { margin: 0 0 20px; color: var(--text-2); }
+.result-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.result-next { margin-top: 26px; }
+.result-next .btn svg { color: var(--c); }
+.result-preview { max-width: 100%; max-height: 320px; box-shadow: var(--page-shadow); margin-bottom: 20px; }
+.size-compare { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 6px 0 22px; }
+.size-compare .arrow { font-size: 24px; color: var(--text-3); }
+.size-box { padding: 12px 18px; border-radius: 12px; background: var(--surface-2); min-width: 120px; }
+.size-box .sb-label { font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+.size-box .sb-val { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.size-box .sb-val.good { color: var(--ok); }
+.size-saving { font-weight: 700; color: var(--ok); }
+.bar-compare { height: 12px; border-radius: 6px; background: var(--surface-3); overflow: hidden; margin: 0 auto 22px; max-width: 360px; }
+.bar-compare div { height: 100%; background: var(--ok); border-radius: 6px; transition: width .6s; }

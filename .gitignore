@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+
+# Compilación
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# Registros
+logs/
+*.log
+npm-debug.log*
+
+# Variables de entorno locales
+.env
+.env.*
+!.env.example
+
+# Configuración local de herramientas
+.claude/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini

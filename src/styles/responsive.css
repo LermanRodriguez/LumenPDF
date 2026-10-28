@@ -1,0 +1,33 @@
+/* Adaptación a tabletas y móviles */
+
+@media (max-width: 960px) {
+    .tool-view { grid-template-columns: 1fr; }
+    .tool-side { position: static; height: auto; border-left: 0; border-top: 1px solid var(--border); }
+    .side-footer { position: sticky; bottom: 0; background: var(--surface); }
+    .editor { grid-template-columns: 1fr; height: auto; }
+    .editor-pages { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+    .editor-pages .page-item { width: 90px; flex: none; }
+    .editor-scroll { height: 70vh; padding: 14px; }
+}
+
+@media (max-width: 760px) {
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 26px; padding: 32px 16px 22px; }
+    .footer-brand { grid-column: 1 / -1; }
+    .footer-bottom { padding: 16px; flex-direction: column; }
+}
+
+@media (max-width: 600px) {
+    .topbar { padding: 10px 16px; }
+    .privacy-badge span { display: none; }
+    .tool-header { padding: 12px 16px; }
+    .tool-header p { display: none; }
+    .tool-body { padding: 16px; }
+    .home { padding: 26px 16px 40px; }
+    .tool-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .tool-card { padding: 14px; gap: 8px; }
+    .tool-card p { font-size: 12.5px; }
+    .editor-toolbar { flex-wrap: nowrap; overflow-x: auto; }
+    .tool-btn { min-width: 54px; }
+    .page-grid { --thumb: 110px !important; gap: 10px; }
+    .dropzone { padding: 36px 16px; }
+}
